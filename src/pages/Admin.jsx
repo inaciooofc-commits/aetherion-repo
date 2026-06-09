@@ -1,0 +1,1 @@
+import AdminPanel from "../components/AdminPanel";export default function Admin(){return <section className="card"><h2>Painel Admin</h2><p>Proteção por perfil admin no Supabase/RLS.</p><AdminPanel /></section>}

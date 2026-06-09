@@ -1,0 +1,1 @@
+export default function PvP(){return <section className="card"><h2>PvP</h2><p>Duelo, arena, emboscada, guerra familiar e zonas perigosas.</p><button className="btn">Buscar duelo</button> <button className="btn secondary">Contratos de caça</button></section>}

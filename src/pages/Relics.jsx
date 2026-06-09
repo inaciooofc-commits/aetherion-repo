@@ -1,0 +1,1 @@
+export default function Relics(){return <section className="card"><h2>Relíquias Sem Nome</h2><p>Tecnologia caída de outros mundos, encantada com Éter.</p><button className="btn">Analisar relíquia</button></section>}

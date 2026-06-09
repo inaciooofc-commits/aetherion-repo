@@ -1,0 +1,1 @@
+export default function Crafting(){return <section className="card"><h2>Crafting</h2><p>Use profissões, materiais e receitas para criar itens reais no banco.</p><button className="btn">Criar Espada de Ferro</button></section>}

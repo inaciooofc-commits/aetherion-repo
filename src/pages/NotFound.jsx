@@ -1,0 +1,1 @@
+import { Link } from "react-router-dom";export default function NotFound(){return <section className="card"><h2>Página não encontrada</h2><Link className="btn" to="/dashboard">Voltar</Link></section>}

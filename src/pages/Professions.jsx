@@ -1,0 +1,1 @@
+import { professions } from "../data/professions";export default function Professions(){return <section className="card"><h2>Profissões</h2><div className="grid cols-3">{professions.map(p=><div className="slot" key={p}>{p}<br/><span className="muted small">Nível 1</span></div>)}</div></section>}

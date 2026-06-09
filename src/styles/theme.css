@@ -1,0 +1,20 @@
+:root {
+  --bg: #070607;
+  --bg2: #111014;
+  --panel: rgba(20, 18, 16, 0.88);
+  --panel2: rgba(35, 28, 22, 0.92);
+  --gold: #c9a45c;
+  --gold2: #f0d694;
+  --blue: #58b7ff;
+  --violet: #9b5cff;
+  --red: #b9403a;
+  --green: #68c77a;
+  --text: #f5ead5;
+  --muted: #b8a98d;
+  --line: rgba(201,164,92,.35);
+  --danger: #db4848;
+  --ok: #70d67b;
+  --shadow: 0 0 26px rgba(0,0,0,.55);
+  --radius: 18px;
+  font-family: "Georgia", "Times New Roman", serif;
+}

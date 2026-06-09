@@ -1,0 +1,1 @@
+export default function Enchanting(){return <section className="card"><h2>Encantamento Magitecnológico</h2><p>Escolha elemento, gaste cristais de Éter e transforme relíquias desconhecidas.</p><button className="btn">Encantar</button></section>}

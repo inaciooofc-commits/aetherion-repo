@@ -1,0 +1,1 @@
+export default function Story(){return <section className="card"><h2>A Ruptura dos Mundos</h2><p>Escolhas ramificadas: Preservação, Magitecnologia, Dominação, Corrupção, União das Raças e Caminho Livre.</p><button className="btn">Registrar crônica</button></section>}

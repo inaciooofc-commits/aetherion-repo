@@ -1,0 +1,1 @@
+export default function Bloodline(){return <section className="card"><h2>Linhagem</h2><p>Árvore de sangue, herdeiros, apadrinhados, mestres e descendentes.</p><button className="btn">Declarar herdeiro</button></section>}

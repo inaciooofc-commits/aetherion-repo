@@ -1,0 +1,1 @@
+export default function Marriage(){return <section className="card"><h2>Casamento e Vínculo de Sangue</h2><p>Envie proposta, aceite vínculo e desbloqueie família derivada.</p><button className="btn">Pedir casamento</button></section>}

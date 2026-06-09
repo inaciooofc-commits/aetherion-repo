@@ -1,0 +1,1 @@
+export default function Morality(){return <section className="card"><h2>Bondade e Maldade</h2><p>Bondade concede cura, defesa e reputação. Maldade concede dano, saque e magia proibida.</p><div className="stat-row"><span>Escala moral</span><strong>-1000 a +1000</strong></div></section>}

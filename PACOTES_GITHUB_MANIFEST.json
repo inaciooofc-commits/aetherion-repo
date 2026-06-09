@@ -1,0 +1,12 @@
+{
+  "repo": "https://github.com/inaciooofc-commits/aetherion-repo.git",
+  "supabaseUrl": "https://ynpcwbjmvyanpztillmd.supabase.co",
+  "packages": {
+    "aetherion_git_pack_01_frontend_codigo.zip": 84,
+    "aetherion_git_pack_02_backend_supabase_assets_base.zip": 67,
+    "aetherion_git_pack_03_imagens_geradas_A.zip": 37,
+    "aetherion_git_pack_04_imagens_geradas_B.zip": 37
+  },
+  "totalFiles": 225,
+  "generatedImages": 74
+}
