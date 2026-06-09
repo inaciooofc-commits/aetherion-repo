@@ -140,3 +140,28 @@ textarea { min-height: 100px; resize: vertical; }
   display: grid;
   gap: 8px;
 }
+
+
+/* PNG DEFINITIVOS - AETHERION */
+.item-icon-frame {
+  display: inline-grid;
+  place-items: center;
+  border-radius: 16px;
+  background: radial-gradient(circle at 50% 38%, rgba(48, 38, 24, .72), rgba(5, 5, 6, .88));
+  border: 1px solid rgba(201, 164, 92, .38);
+  box-shadow: inset 0 0 18px rgba(0,0,0,.8), 0 0 18px rgba(61, 143, 255, .08);
+  overflow: hidden;
+}
+.item-icon-frame img { width: 92%; height: 92%; object-fit: contain; filter: drop-shadow(0 8px 10px rgba(0,0,0,.65)); }
+.item-card-actions { display:flex; gap:6px; margin-top:8px; justify-content:center; flex-wrap:wrap; }
+.item-card.rarity-rare { border-color: rgba(69, 154, 255, .55); }
+.item-card.rarity-anomalous, .item-card.rarity-sacred { border-color: rgba(168, 85, 247, .65); box-shadow: 0 0 18px rgba(168,85,247,.10); }
+.filter-bar { display:flex; gap:8px; flex-wrap:wrap; margin: 14px 0 18px; }
+.chip { border:1px solid var(--line); color: var(--text); background:rgba(0,0,0,.24); border-radius:999px; padding:8px 12px; cursor:pointer; text-transform:capitalize; }
+.chip.active { border-color: var(--gold2); box-shadow: 0 0 14px rgba(201,164,92,.22); color: var(--gold2); }
+.inventory-grid.compact { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+.market-item-card { display:flex; align-items:center; gap:14px; }
+.asset-slot-list { max-height: 580px; overflow:auto; padding-right: 6px; }
+.item-slot-button { display:grid; grid-template-columns: 48px 1fr; align-items:center; text-align:left; gap:8px; }
+.equipment-slots-panel { min-width: 190px; }
+@media (max-width: 760px) { .market-item-card { align-items:flex-start; } .item-slot-button { grid-template-columns: 42px 1fr; } }

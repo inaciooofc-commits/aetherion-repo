@@ -1,12 +1,15 @@
-export default function ItemCard({ item, onEquip, onSell }) {
+import ItemIcon from "./ItemIcon";
+
+export default function ItemCard({ item, onEquip, onSell, onUse }) {
   return (
-    <div className="item-card">
-      <img src={item.icon || "/assets/items/cristal_eter.png"} alt="" />
+    <div className={`item-card rarity-${item.rarity || "common"}`}>
+      <ItemIcon item={item} size={82} />
       <strong>{item.name}</strong>
       <div className="rarity">{item.rarity || "Comum"}</div>
-      <div className="small muted">{item.type}</div>
-      <div style={{display:"flex", gap:6, marginTop:8, justifyContent:"center"}}>
-        {onEquip && <button className="btn small" onClick={() => onEquip(item)}>Equipar</button>}
+      <div className="small muted">{item.type || item.category}</div>
+      <div className="item-card-actions">
+        {onEquip && item.slot && <button className="btn small" onClick={() => onEquip(item)}>Equipar</button>}
+        {onUse && item.type === "consumable" && <button className="btn small" onClick={() => onUse(item)}>Usar</button>}
         {onSell && <button className="btn secondary small" onClick={() => onSell(item)}>Vender</button>}
       </div>
     </div>

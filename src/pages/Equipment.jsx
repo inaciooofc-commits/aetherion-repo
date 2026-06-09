@@ -1,23 +1,39 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import CharacterEquipmentPreview from "../components/CharacterEquipmentPreview";
-import { starterItems } from "../data/starterItems";
+import ItemIcon from "../components/ItemIcon";
+import { itemRegistry } from "../data/itemRegistry";
+
+const slots = ["weapon", "shield", "helmet", "chest", "hands", "boots", "cape", "ring", "relic"];
 
 export default function Equipment() {
+  const equipableItems = useMemo(() => itemRegistry.filter((item) => item.slot), []);
   const [equipment, setEquipment] = useState({ weapon: "weapon_none", shield: "shield_none", chest: "armor_none", helmet: "helmet_none" });
-  const options = [
-    ["weapon", "weapon_sword", "Espada de Ferro"], ["shield", "shield_valmorne", "Escudo Valmorne"],
-    ["chest", "armor_leather", "Peitoral de Couro"], ["chest", "armor_plate", "Armadura de Placas"],
-    ["helmet", "helmet_iron", "Elmo de Ferro"], ["relic", "amuleto_eter", "Amuleto de Éter"]
-  ];
+  const [equippedItems, setEquippedItems] = useState({});
+
+  function equip(item) {
+    setEquippedItems((current) => ({ ...current, [item.slot]: item }));
+    if (item.visual_key) {
+      setEquipment((current) => ({ ...current, [item.slot === "relic" ? "relic" : item.slot]: item.visual_key }));
+    }
+  }
+
   return <section className="card">
     <h2>Equipamentos em tempo real</h2>
-    <p className="muted">Ao equipar um item, o personagem muda visualmente na hora por camadas.</p>
+    <p className="muted">Ao equipar um PNG, o slot visual é atualizado imediatamente. Itens com camada própria usam <code>visual_key</code>.</p>
     <div className="equipment-preview">
-      <div className="slot-list">{options.map(([slot,key,label]) => <button className="slot" key={slot+key} onClick={() => setEquipment(e => ({...e, [slot]: key}))}>{label}</button>)}</div>
+      <div className="slot-list asset-slot-list">
+        {equipableItems.map((item) => <button className="slot item-slot-button" key={item.key} onClick={() => equip(item)}>
+          <ItemIcon item={item} size={42} />
+          <span>{item.name}</span>
+        </button>)}
+      </div>
       <CharacterEquipmentPreview equipment={equipment} />
-      <div className="card">
+      <div className="card equipment-slots-panel">
         <h3>Slots</h3>
-        {Object.entries(equipment).map(([k,v]) => <div className="stat-row" key={k}><span>{k}</span><strong>{v}</strong></div>)}
+        {slots.map((slot) => <div className="stat-row" key={slot}>
+          <span>{slot}</span>
+          <strong>{equippedItems[slot]?.name || "Vazio"}</strong>
+        </div>)}
       </div>
     </div>
   </section>;
