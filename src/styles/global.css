@@ -165,3 +165,88 @@ textarea { min-height: 100px; resize: vertical; }
 .item-slot-button { display:grid; grid-template-columns: 48px 1fr; align-items:center; text-align:left; gap:8px; }
 .equipment-slots-panel { min-width: 190px; }
 @media (max-width: 760px) { .market-item-card { align-items:flex-start; } .item-slot-button { grid-template-columns: 42px 1fr; } }
+
+/* Phaser integration */
+.phaser-page {
+  display: grid;
+  gap: 14px;
+}
+
+.phaser-hud-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px 14px;
+  background: rgba(5, 4, 3, 0.82);
+  box-shadow: var(--shadow);
+}
+
+.phaser-hud-card div {
+  display: grid;
+  gap: 4px;
+}
+
+.phaser-hud-card strong {
+  color: var(--gold2);
+  font-size: 18px;
+}
+
+.phaser-hud-card span,
+.phaser-hud-card p {
+  color: var(--muted);
+  margin: 0;
+}
+
+.phaser-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 14px;
+  align-items: stretch;
+}
+
+.phaser-frame {
+  min-height: 640px;
+  height: calc(100vh - 160px);
+  border: 1px solid rgba(201, 164, 92, 0.42);
+  background: #050505;
+}
+
+.phaser-frame canvas {
+  display: block;
+}
+
+.phaser-log-panel {
+  max-height: calc(100vh - 160px);
+  overflow: auto;
+}
+
+.phaser-log-panel .stat-row {
+  align-items: flex-start;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+@media (max-width: 1100px) {
+  .phaser-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .phaser-log-panel {
+    max-height: 260px;
+  }
+}
+
+@media (max-width: 700px) {
+  .phaser-hud-card {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .phaser-frame {
+    min-height: 520px;
+    height: 72vh;
+  }
+}
