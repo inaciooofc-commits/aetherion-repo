@@ -4,6 +4,7 @@ import {
   CHARACTER_LAYERS,
   ITEM_TEXTURES,
   SPRITESHEETS,
+  OXX_CHARACTER_SPRITESHEETS,
   WORLD_TEXTURES,
   loadImageMap
 } from "../assets/phaserAssetManifest";
@@ -35,7 +36,7 @@ export default class PreloadScene extends Phaser.Scene {
       fill.destroy();
     });
 
-    SPRITESHEETS.forEach(([key, path, frameConfig]) => {
+    [...SPRITESHEETS, ...OXX_CHARACTER_SPRITESHEETS].forEach(([key, path, frameConfig]) => {
       if (!this.textures.exists(key)) this.load.spritesheet(key, path, frameConfig);
     });
 
@@ -48,21 +49,27 @@ export default class PreloadScene extends Phaser.Scene {
   create() {
     ["hero", "goblin", "wolf", "bandit", "npc_guard"].forEach((key) => {
       if (!this.anims.exists(`${key}_idle`)) {
-        this.anims.create({
-          key: `${key}_idle`,
-          frames: this.anims.generateFrameNumbers(key, { start: 0, end: 1 }),
-          frameRate: 2,
-          repeat: -1
-        });
+        this.anims.create({ key: `${key}_idle`, frames: this.anims.generateFrameNumbers(key, { start: 0, end: 1 }), frameRate: 2, repeat: -1 });
       }
       if (!this.anims.exists(`${key}_walk`)) {
-        this.anims.create({
-          key: `${key}_walk`,
-          frames: this.anims.generateFrameNumbers(key, { start: 0, end: 3 }),
-          frameRate: 8,
-          repeat: -1
-        });
+        this.anims.create({ key: `${key}_walk`, frames: this.anims.generateFrameNumbers(key, { start: 0, end: 3 }), frameRate: 8, repeat: -1 });
       }
+    });
+
+    OXX_CHARACTER_SPRITESHEETS.forEach(([key]) => {
+      const rows = {
+        idle_south: [0, 3, 2],
+        walk_south: [4, 7, 8],
+        walk_north: [8, 11, 8],
+        walk_east: [12, 15, 8],
+        walk_west: [16, 19, 8]
+      };
+      Object.entries(rows).forEach(([state, [start, end, frameRate]]) => {
+        const animKey = `${key}_${state}`;
+        if (!this.anims.exists(animKey)) {
+          this.anims.create({ key: animKey, frames: this.anims.generateFrameNumbers(key, { start, end }), frameRate, repeat: -1 });
+        }
+      });
     });
 
     pushGameLog("Assets Phaser carregados: mapa, ações, mobs, itens e camadas do personagem.");

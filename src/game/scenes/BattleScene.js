@@ -1,6 +1,5 @@
 import Phaser from "phaser";
 import BattleVisualSystem from "../systems/BattleVisualSystem";
-import EquipmentVisualSystem from "../systems/EquipmentVisualSystem";
 import { pushGameLog, updateGameHud } from "../bridge/gameEvents";
 
 const ACTIONS = [
@@ -35,7 +34,6 @@ export default class BattleScene extends Phaser.Scene {
   create() {
     this.cameras.main.setBackgroundColor("#120c0a");
     this.visuals = new BattleVisualSystem(this);
-    this.equipmentVisual = new EquipmentVisualSystem(this);
     this.createArena();
     this.createActors();
     this.createBars();
@@ -68,13 +66,11 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   createActors() {
-    this.player = this.equipmentVisual.createCharacterContainer(230, 405, {
-      chest: "armor_leather",
-      helmet: "helmet_none",
-      weapon: "weapon_sword",
-      shield: "shield_valmorne",
-      hair: "hair_01_black"
-    }).setScale(1.18).setDepth(10);
+    const characterKey = this.registry.get("oxx:activeCharacter") || localStorage.getItem("aetherion:activeCharacter") || "valorian_knight";
+    this.player = this.add.sprite(230, 405, characterKey, 4)
+      .setDisplaySize(100, 126)
+      .setDepth(10);
+    this.player.play(`${characterKey}_walk_east`, true);
 
     this.enemy = this.add.image(this.scale.width - 240, 402, this.enemyTexture)
       .setDisplaySize(145, 145)

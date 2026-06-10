@@ -1,8 +1,9 @@
 import ItemIcon from "./ItemIcon";
 
 export default function ItemCard({ item, onEquip, onSell, onUse }) {
+  const info = buildItemInfo(item);
   return (
-    <div className={`item-card rarity-${item.rarity || "common"}`}>
+    <div className={`item-card rarity-${item.rarity || "common"} item-hover-info`} data-tooltip={info}>
       <ItemIcon item={item} size={82} />
       <strong>{item.name}</strong>
       <div className="rarity">{item.rarity || "Comum"}</div>
@@ -14,4 +15,11 @@ export default function ItemCard({ item, onEquip, onSell, onUse }) {
       </div>
     </div>
   );
+}
+
+function buildItemInfo(item = {}) {
+  const stats = item.stats && typeof item.stats === "object"
+    ? Object.entries(item.stats).map(([key, value]) => `${key}: ${value}`).join(" • ")
+    : "Sem atributos extras";
+  return `${item.name || "Item"}\nTipo: ${item.type || item.category || "geral"}\nRaridade: ${item.rarity || "comum"}\n${stats}`;
 }

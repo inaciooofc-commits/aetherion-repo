@@ -30,6 +30,7 @@ export function createGameConfig(parent, options = {}) {
         game.registry.set("aetherion:startScene", options.startScene || "WorldScene");
         game.registry.set("aetherion:battleData", options.battleData || {});
         game.registry.set("aetherion:equipment", options.equipment || {});
+        game.registry.set("oxx:activeCharacter", options.activeCharacter || "valorian_knight");
       }
     },
     scene: [BootScene, PreloadScene, WorldScene, BattleScene, CharacterPreviewScene]

@@ -20,6 +20,11 @@ export default class MovementSystem {
     this.joystickVector = { x, y };
   }
 
+  getDirection(vx, vy) {
+    if (Math.abs(vx) > Math.abs(vy)) return vx >= 0 ? "east" : "west";
+    return vy < 0 ? "north" : "south";
+  }
+
   update() {
     if (!this.player?.bodySprite) return;
     const body = this.player.bodySprite;
@@ -51,10 +56,11 @@ export default class MovementSystem {
     this.player.syncVisual();
 
     if (vx || vy) {
-      this.player.setMoving(true);
+      const direction = this.getDirection(vx, vy);
+      this.player.setMoving(true, direction);
       this.player.setFlip(vx < 0);
     } else {
-      this.player.setMoving(false);
+      this.player.setMoving(false, "south");
     }
   }
 }

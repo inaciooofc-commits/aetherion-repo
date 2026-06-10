@@ -1,3 +1,5 @@
+import { OXX_CHARACTERS } from "../data/oxxCharacters";
+
 export const SPRITESHEETS = [
   ["hero", "/assets/sprites/hero.png", { frameWidth: 64, frameHeight: 64 }],
   ["goblin", "/assets/sprites/goblin.png", { frameWidth: 64, frameHeight: 64 }],
@@ -6,6 +8,12 @@ export const SPRITESHEETS = [
   ["chest", "/assets/sprites/chest.png", { frameWidth: 64, frameHeight: 64 }],
   ["npc_guard", "/assets/sprites/npc_guard.png", { frameWidth: 64, frameHeight: 64 }]
 ];
+
+export const OXX_CHARACTER_SPRITESHEETS = OXX_CHARACTERS.map((character) => [
+  character.key,
+  character.sprite,
+  { frameWidth: 128, frameHeight: 160 }
+]);
 
 export const CHARACTER_LAYERS = {
   aura_none: "/assets/characters/layers/aura_none.png",
@@ -65,6 +73,7 @@ export const ITEM_TEXTURES = {
 };
 
 export const WORLD_TEXTURES = {
+  aetherion_full_board: "/assets/maps/aetherion_full_board.png",
   cidade_capital: "/assets/map-icons/cidade_capital.png",
   vila: "/assets/map-icons/vila.png",
   floresta: "/assets/map-icons/floresta.png",

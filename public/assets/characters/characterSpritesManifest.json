@@ -1,0 +1,152 @@
+[
+  {
+    "key": "valorian_knight",
+    "name": "Valorian Knight",
+    "path": "/assets/characters/spritesheets/valorian_knight.png",
+    "reference": "/assets/characters/reference/valorian_knight_reference.png",
+    "frameWidth": 128,
+    "frameHeight": 160,
+    "rows": [
+      "idle_south",
+      "walk_south",
+      "walk_north",
+      "walk_east",
+      "walk_west"
+    ]
+  },
+  {
+    "key": "elaris_moonmage",
+    "name": "Elaris Moonmage",
+    "path": "/assets/characters/spritesheets/elaris_moonmage.png",
+    "reference": "/assets/characters/reference/elaris_moonmage_reference.png",
+    "frameWidth": 128,
+    "frameHeight": 160,
+    "rows": [
+      "idle_south",
+      "walk_south",
+      "walk_north",
+      "walk_east",
+      "walk_west"
+    ]
+  },
+  {
+    "key": "dhurak_forgeguard",
+    "name": "Dhurak Forgeguard",
+    "path": "/assets/characters/spritesheets/dhurak_forgeguard.png",
+    "reference": "/assets/characters/reference/dhurak_forgeguard_reference.png",
+    "frameWidth": 128,
+    "frameHeight": 160,
+    "rows": [
+      "idle_south",
+      "walk_south",
+      "walk_north",
+      "walk_east",
+      "walk_west"
+    ]
+  },
+  {
+    "key": "gorvath_warbreaker",
+    "name": "Gorvath Warbreaker",
+    "path": "/assets/characters/spritesheets/gorvath_warbreaker.png",
+    "reference": "/assets/characters/reference/gorvath_warbreaker_reference.png",
+    "frameWidth": 128,
+    "frameHeight": 160,
+    "rows": [
+      "idle_south",
+      "walk_south",
+      "walk_north",
+      "walk_east",
+      "walk_west"
+    ]
+  },
+  {
+    "key": "drakari_flameblade",
+    "name": "Drakari Flameblade",
+    "path": "/assets/characters/spritesheets/drakari_flameblade.png",
+    "reference": "/assets/characters/reference/drakari_flameblade_reference.png",
+    "frameWidth": 128,
+    "frameHeight": 160,
+    "rows": [
+      "idle_south",
+      "walk_south",
+      "walk_north",
+      "walk_east",
+      "walk_west"
+    ]
+  },
+  {
+    "key": "solkar_dune_rogue",
+    "name": "Solkar Dune Rogue",
+    "path": "/assets/characters/spritesheets/solkar_dune_rogue.png",
+    "reference": "/assets/characters/reference/solkar_dune_rogue_reference.png",
+    "frameWidth": 128,
+    "frameHeight": 160,
+    "rows": [
+      "idle_south",
+      "walk_south",
+      "walk_north",
+      "walk_east",
+      "walk_west"
+    ]
+  },
+  {
+    "key": "bloodbound_paladin",
+    "name": "Bloodbound Paladin",
+    "path": "/assets/characters/spritesheets/bloodbound_paladin.png",
+    "reference": "/assets/characters/reference/bloodbound_paladin_reference.png",
+    "frameWidth": 128,
+    "frameHeight": 160,
+    "rows": [
+      "idle_south",
+      "walk_south",
+      "walk_north",
+      "walk_east",
+      "walk_west"
+    ]
+  },
+  {
+    "key": "ether_engineer",
+    "name": "Ether Engineer",
+    "path": "/assets/characters/spritesheets/ether_engineer.png",
+    "reference": "/assets/characters/reference/ether_engineer_reference.png",
+    "frameWidth": 128,
+    "frameHeight": 160,
+    "rows": [
+      "idle_south",
+      "walk_south",
+      "walk_north",
+      "walk_east",
+      "walk_west"
+    ]
+  },
+  {
+    "key": "shadow_veil_assassin",
+    "name": "Shadow Veil Assassin",
+    "path": "/assets/characters/spritesheets/shadow_veil_assassin.png",
+    "reference": "/assets/characters/reference/shadow_veil_assassin_reference.png",
+    "frameWidth": 128,
+    "frameHeight": 160,
+    "rows": [
+      "idle_south",
+      "walk_south",
+      "walk_north",
+      "walk_east",
+      "walk_west"
+    ]
+  },
+  {
+    "key": "nythra_swamp_warden",
+    "name": "Nythra Swamp Warden",
+    "path": "/assets/characters/spritesheets/nythra_swamp_warden.png",
+    "reference": "/assets/characters/reference/nythra_swamp_warden_reference.png",
+    "frameWidth": 128,
+    "frameHeight": 160,
+    "rows": [
+      "idle_south",
+      "walk_south",
+      "walk_north",
+      "walk_east",
+      "walk_west"
+    ]
+  }
+]

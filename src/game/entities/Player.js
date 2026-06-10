@@ -1,20 +1,32 @@
 import EquipmentVisualSystem, { DEFAULT_EQUIPMENT_VISUAL } from "../systems/EquipmentVisualSystem";
+import { getOxxCharacter } from "../data/oxxCharacters";
 
 export default class Player {
-  constructor(scene, x, y, equipment = {}) {
+  constructor(scene, x, y, options = {}) {
     this.scene = scene;
     this.speed = 185;
-    this.equipment = { ...DEFAULT_EQUIPMENT_VISUAL, ...equipment };
-    this.bodySprite = scene.physics.add.sprite(x, y, "hero", 0)
-      .setCollideWorldBounds(true)
-      .setSize(32, 44)
-      .setOffset(16, 18)
-      .setVisible(false);
+    this.characterKey = options.characterKey || scene.registry.get("oxx:activeCharacter") || "valorian_knight";
+    this.equipment = { ...DEFAULT_EQUIPMENT_VISUAL, ...(options.equipment || options) };
+    this.mode = options.mode || "sprite";
 
-    this.equipmentVisual = new EquipmentVisualSystem(scene);
-    this.visual = this.equipmentVisual.createCharacterContainer(x, y, this.equipment);
-    this.shadow = scene.add.ellipse(x, y + 18, 72, 24, 0x000000, 0.35).setDepth(7);
-    this.nameplate = scene.add.text(x, y - 104, "Você", {
+    this.bodySprite = scene.physics.add.sprite(x, y, this.characterKey, 0)
+      .setCollideWorldBounds(true)
+      .setSize(44, 54)
+      .setOffset(42, 92)
+      .setDepth(11);
+
+    if (this.mode === "sprite") {
+      this.bodySprite.setDisplaySize(82, 110);
+      this.bodySprite.play(`${this.characterKey}_idle_south`, true);
+      this.visual = null;
+    } else {
+      this.bodySprite.setVisible(false);
+      this.equipmentVisual = new EquipmentVisualSystem(scene);
+      this.visual = this.equipmentVisual.createCharacterContainer(x, y, this.equipment);
+    }
+
+    this.shadow = scene.add.ellipse(x, y + 31, 72, 24, 0x000000, 0.35).setDepth(7);
+    this.nameplate = scene.add.text(x, y - 72, getOxxCharacter(this.characterKey).name, {
       fontFamily: "Georgia",
       fontSize: "13px",
       color: "#f0d694",
@@ -24,21 +36,40 @@ export default class Player {
   }
 
   syncVisual() {
-    this.visual.setPosition(this.bodySprite.x, this.bodySprite.y);
+    if (this.visual) this.visual.setPosition(this.bodySprite.x, this.bodySprite.y);
     this.shadow.setPosition(this.bodySprite.x, this.bodySprite.y + 34);
-    this.nameplate.setPosition(this.bodySprite.x, this.bodySprite.y - 104);
+    this.nameplate.setPosition(this.bodySprite.x, this.bodySprite.y - 72);
   }
 
   applyEquipment(nextEquipment = {}) {
     this.equipment = { ...this.equipment, ...nextEquipment };
-    this.visual.applyEquipment(this.equipment);
+    if (this.visual?.applyEquipment) this.visual.applyEquipment(this.equipment);
   }
 
-  setMoving(isMoving) {
-    this.visual.setScale(isMoving ? 1.035 : 1);
+  setCharacter(characterKey) {
+    this.characterKey = characterKey || this.characterKey;
+    const character = getOxxCharacter(this.characterKey);
+    this.bodySprite.setTexture(this.characterKey, 0).setVisible(true).setDisplaySize(82, 110);
+    if (this.visual) this.visual.setVisible(false);
+    this.nameplate.setText(character.name);
+    this.playState("idle_south");
+  }
+
+  playState(state = "idle_south") {
+    const animKey = `${this.characterKey}_${state}`;
+    if (this.scene.anims.exists(animKey)) this.bodySprite.play(animKey, true);
+  }
+
+  setMoving(isMoving, direction = "south") {
+    if (this.mode === "sprite") {
+      this.playState(isMoving ? `walk_${direction}` : "idle_south");
+      return;
+    }
+    this.visual?.setScale(isMoving ? 1.035 : 1);
   }
 
   setFlip(flip) {
-    this.visual.setScale(flip ? -Math.abs(this.visual.scaleX || 1) : Math.abs(this.visual.scaleX || 1), this.visual.scaleY || 1);
+    if (this.mode === "sprite") return;
+    this.visual?.setScale(flip ? -Math.abs(this.visual.scaleX || 1) : Math.abs(this.visual.scaleX || 1), this.visual.scaleY || 1);
   }
 }
