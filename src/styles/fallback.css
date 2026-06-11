@@ -1,0 +1,66 @@
+.fallback-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0a0609 0%, #14100c 100%);
+  color: #f7e3b0;
+  font-family: serif;
+}
+
+.fallback-box {
+  background: rgba(29, 20, 16, 0.95);
+  border: 2px solid #b99150;
+  border-radius: 8px;
+  padding: 32px;
+  text-align: center;
+  max-width: 500px;
+}
+
+.fallback-box h1 {
+  font-size: 32px;
+  color: #d8b45c;
+  margin-bottom: 16px;
+}
+
+.fallback-box p {
+  font-size: 14px;
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+
+.fallback-list {
+  text-align: left;
+  font-size: 12px;
+  margin: 20px 0;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 12px;
+  border-left: 2px solid #ab65ff;
+  border-radius: 4px;
+}
+
+.fallback-list li {
+  margin: 6px 0;
+  list-style: none;
+  padding-left: 20px;
+}
+
+.fallback-list li:before {
+  content: '✓';
+  position: absolute;
+  margin-left: -20px;
+  color: #6cc984;
+}
+
+.fallback-spinner {
+  margin: 20px 0;
+  font-size: 32px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
