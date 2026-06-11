@@ -1,27 +1,23 @@
 {
-  "name": "aetherion-o-despertar-das-racas",
+  "name": "aetherion-phaser-oxx-retomada",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.4.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0",
     "build": "vite build",
-    "preview": "vite preview",
-    "lint:structure": "node scripts/check-project.mjs"
+    "preview": "vite preview --host 0.0.0.0",
+    "check": "node scripts/check-project.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.4",
-    "phaser": "^3.85.2",
+    "@vitejs/plugin-react": "4.5.1",
+    "vite": "6.3.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.26.2",
-    "pixi.js": "^8.6.6"
+    "phaser": "^3.85.2",
+    "pixi.js": "^8.4.1"
   },
-  "devDependencies": {
-    "@vitejs/plugin-react": "4.5.1",
-    "vite": "6.3.5"
-  },
-  "engines": {
-    "node": ">=20.0.0"
-  }
+  "devDependencies": {},
+  "engines": {"node": ">=20.0.0"}
 }

@@ -1,0 +1,356 @@
+{
+  "width": 4096,
+  "height": 3072,
+  "tileSize": 64,
+  "spawn": {
+    "x": 620,
+    "y": 850
+  },
+  "fastTravel": [
+    {
+      "id": "valoria",
+      "name": "Valoria",
+      "x": 620,
+      "y": 850,
+      "color": "#d8b45c"
+    },
+    {
+      "id": "elarion",
+      "name": "Elarion",
+      "x": 1040,
+      "y": 520,
+      "color": "#8ef0c4"
+    },
+    {
+      "id": "krag_dhur",
+      "name": "Krag-Dhur",
+      "x": 1820,
+      "y": 650,
+      "color": "#c7804d"
+    },
+    {
+      "id": "gorvakar",
+      "name": "Gorvakar",
+      "x": 2700,
+      "y": 960,
+      "color": "#d95847"
+    },
+    {
+      "id": "drakmorne",
+      "name": "Drakmorne",
+      "x": 3230,
+      "y": 1510,
+      "color": "#ff8440"
+    },
+    {
+      "id": "nythra",
+      "name": "Pântano de Nythra",
+      "x": 860,
+      "y": 1990,
+      "color": "#6cc984"
+    },
+    {
+      "id": "solkar",
+      "name": "Deserto de Solkar",
+      "x": 1960,
+      "y": 2280,
+      "color": "#e8c76d"
+    },
+    {
+      "id": "abismo",
+      "name": "Abismo de Éter",
+      "x": 3360,
+      "y": 2450,
+      "color": "#ab65ff"
+    }
+  ],
+  "objects": [
+    {
+      "kind": "house_valoria",
+      "x": 500,
+      "y": 690,
+      "w": 180,
+      "h": 120,
+      "collider": {
+        "x": 530,
+        "y": 780,
+        "w": 135,
+        "h": 70
+      }
+    },
+    {
+      "kind": "blacksmith",
+      "x": 760,
+      "y": 705,
+      "w": 190,
+      "h": 130,
+      "collider": {
+        "x": 790,
+        "y": 800,
+        "w": 145,
+        "h": 70
+      }
+    },
+    {
+      "kind": "mage_hut",
+      "x": 1010,
+      "y": 430,
+      "w": 170,
+      "h": 125,
+      "collider": {
+        "x": 1040,
+        "y": 520,
+        "w": 130,
+        "h": 66
+      }
+    },
+    {
+      "kind": "gate_castle",
+      "x": 600,
+      "y": 1020,
+      "w": 180,
+      "h": 140,
+      "collider": {
+        "x": 630,
+        "y": 1110,
+        "w": 130,
+        "h": 38
+      },
+      "gate": true,
+      "to": "solkar"
+    },
+    {
+      "kind": "wall_stone",
+      "x": 380,
+      "y": 1040,
+      "w": 160,
+      "h": 90,
+      "collider": {
+        "x": 380,
+        "y": 1075,
+        "w": 160,
+        "h": 52
+      }
+    },
+    {
+      "kind": "wall_stone",
+      "x": 800,
+      "y": 1040,
+      "w": 160,
+      "h": 90,
+      "collider": {
+        "x": 800,
+        "y": 1075,
+        "w": 160,
+        "h": 52
+      }
+    },
+    {
+      "kind": "tree_oak",
+      "x": 310,
+      "y": 560,
+      "w": 92,
+      "h": 120,
+      "collider": {
+        "x": 340,
+        "y": 640,
+        "w": 34,
+        "h": 34
+      }
+    },
+    {
+      "kind": "tree_oak",
+      "x": 1110,
+      "y": 620,
+      "w": 92,
+      "h": 120,
+      "collider": {
+        "x": 1140,
+        "y": 700,
+        "w": 34,
+        "h": 34
+      }
+    },
+    {
+      "kind": "tree_dark",
+      "x": 950,
+      "y": 1490,
+      "w": 96,
+      "h": 130,
+      "collider": {
+        "x": 980,
+        "y": 1580,
+        "w": 36,
+        "h": 36
+      }
+    },
+    {
+      "kind": "tree_swamp",
+      "x": 750,
+      "y": 1870,
+      "w": 105,
+      "h": 140,
+      "collider": {
+        "x": 785,
+        "y": 1970,
+        "w": 38,
+        "h": 38
+      }
+    },
+    {
+      "kind": "rock_gray",
+      "x": 1410,
+      "y": 1020,
+      "w": 96,
+      "h": 64,
+      "collider": {
+        "x": 1430,
+        "y": 1040,
+        "w": 56,
+        "h": 38
+      }
+    },
+    {
+      "kind": "rock_dark",
+      "x": 2780,
+      "y": 1520,
+      "w": 96,
+      "h": 64,
+      "collider": {
+        "x": 2800,
+        "y": 1540,
+        "w": 56,
+        "h": 38
+      }
+    }
+  ],
+  "npcs": [
+    {
+      "id": "merchant",
+      "sprite": "npc_merchant",
+      "name": "Iram, Mercador de Solkar",
+      "x": 660,
+      "y": 760,
+      "dialogue": "Relíquias aparecem para quem sabe pagar o preço."
+    },
+    {
+      "id": "blacksmith",
+      "sprite": "npc_blacksmith",
+      "name": "Borun Dhurakar",
+      "x": 850,
+      "y": 780,
+      "dialogue": "Ferro não mente. Se quebra, foi maltratado."
+    },
+    {
+      "id": "guard",
+      "sprite": "npc_guard",
+      "name": "Guarda Valmoriano",
+      "x": 580,
+      "y": 1020,
+      "dialogue": "O portão leva às rotas rápidas. Clique nos locais para viajar."
+    },
+    {
+      "id": "mage",
+      "sprite": "npc_mage",
+      "name": "Lyssara Elarisian",
+      "x": 1060,
+      "y": 570,
+      "dialogue": "Grimórios registram escolhas, não desculpas."
+    },
+    {
+      "id": "banker",
+      "sprite": "npc_banker",
+      "name": "Banqueiro da Coroa",
+      "x": 720,
+      "y": 900,
+      "dialogue": "O banco do mundo ainda está em modo local."
+    }
+  ],
+  "mobs": [
+    {
+      "id": "wolf1",
+      "sprite": "mob_wolf",
+      "name": "Lobo de Campo",
+      "x": 430,
+      "y": 1180,
+      "level": 2
+    },
+    {
+      "id": "goblin1",
+      "sprite": "mob_goblin",
+      "name": "Goblin Saqueador",
+      "x": 1050,
+      "y": 1180,
+      "level": 4
+    },
+    {
+      "id": "shadow1",
+      "sprite": "mob_shadow",
+      "name": "Sombra Errante",
+      "x": 1240,
+      "y": 1720,
+      "level": 9
+    },
+    {
+      "id": "golem1",
+      "sprite": "mob_golem",
+      "name": "Golem Rachado",
+      "x": 1840,
+      "y": 710,
+      "level": 12
+    },
+    {
+      "id": "spider1",
+      "sprite": "mob_spider",
+      "name": "Aranha Cristalina",
+      "x": 1130,
+      "y": 470,
+      "level": 7
+    },
+    {
+      "id": "scorpion1",
+      "sprite": "mob_scorpion",
+      "name": "Escorpião Solar",
+      "x": 1990,
+      "y": 2250,
+      "level": 13
+    },
+    {
+      "id": "drake1",
+      "sprite": "mob_drake",
+      "name": "Drake de Cinzas",
+      "x": 3240,
+      "y": 1500,
+      "level": 18
+    },
+    {
+      "id": "boss1",
+      "sprite": "boss_monarch",
+      "name": "Monarca das Sombras",
+      "x": 3400,
+      "y": 2460,
+      "level": 30,
+      "boss": true
+    }
+  ],
+  "loot": [
+    {
+      "sprite": "item_sword",
+      "name": "Espada Curta",
+      "x": 720,
+      "y": 1050
+    },
+    {
+      "sprite": "item_potion",
+      "name": "Poção de Cura",
+      "x": 930,
+      "y": 1130
+    },
+    {
+      "sprite": "item_crystal",
+      "name": "Cristal de Éter",
+      "x": 1230,
+      "y": 680
+    }
+  ]
+}

@@ -1,157 +1,150 @@
-import Phaser from "phaser";
-import Player from "../entities/Player";
-import Mob from "../entities/Mob";
-import NPC from "../entities/NPC";
-import Chest from "../entities/Chest";
-import MovementSystem from "../systems/MovementSystem";
-import DialogueSystem from "../systems/DialogueSystem";
-import LootSystem from "../systems/LootSystem";
-import OXXhEngine from "../engines/OXXhEngine";
-import { pushGameLog, updateGameHud } from "../bridge/gameEvents";
-import { OXX_WORLD_MAP } from "../data/oxxWorldMap";
+import Phaser from 'phaser';
+import { EventBus } from '../bridge/EventBus';
+import { OXX } from '../oxx/OXX';
+import { OXXh } from '../oxx/OXXh';
+import { Brigs } from '../oxx/Brigs';
+import { CHARACTERS } from '../data/characters';
+import { Player } from '../entities/Player';
+
+const TILE_BY_REGION = (x, y) => {
+  if (x > 3000 && y > 1200) return 'tile_lava';
+  if (y > 2050 && x < 2500) return 'tile_sand';
+  if (x < 1200 && y > 1650) return 'tile_swamp';
+  if (x > 1450 && x < 2300 && y < 950) return 'tile_stone';
+  if (x > 850 && x < 1350 && y < 800) return 'tile_dark_grass';
+  return (x % 512 < 128 || y % 512 < 96) ? 'tile_road' : 'tile_grass';
+};
 
 export default class WorldScene extends Phaser.Scene {
-  constructor() {
-    super("WorldScene");
-  }
-
+  constructor() { super('WorldScene'); }
   create() {
-    this.cameras.main.setBackgroundColor("#070504");
-    this.oxxh = new OXXhEngine(this);
-    this.oxxh.build();
+    this.world = this.cache.json.get('world_data');
+    this.physics.world.setBounds(0, 0, this.world.width, this.world.height);
+    this.cameras.main.setBounds(0, 0, this.world.width, this.world.height);
+    this.cameras.main.setZoom(1);
 
-    const characterKey = this.registry.get("oxx:activeCharacter") || "valorian_knight";
-    this.player = new Player(this, OXX_WORLD_MAP.playerStart.x, OXX_WORLD_MAP.playerStart.y, { characterKey, mode: "sprite" });
-    this.oxxh.bindPlayer(this.player);
-
-    this.movementSystem = new MovementSystem(this, this.player, { speed: 210 });
-    this.dialogueSystem = new DialogueSystem(this);
-    this.lootSystem = new LootSystem(this);
-
+    this.drawTileWorld();
+    this.collisionZones = [];
+    this.createObjects();
+    this.createFastTravel();
     this.createNPCs();
     this.createMobs();
-    this.createChests();
-    this.createMobileControls();
-    this.createWorldHud();
-    this.registerCharacterSwitch();
+    this.createLoot();
 
-    this.cameras.main.startFollow(this.player.bodySprite, true, 0.08, 0.08);
-    this.cameras.main.setBounds(0, 0, OXX_WORLD_MAP.width, OXX_WORLD_MAP.height);
-    this.cameras.main.setZoom(0.95);
-    updateGameHud({ region: "Aetherion", zone: "Mapa Completo", objective: "Clique em uma região do mapa para viajar. Casas, paredes, rios e fortalezas bloqueiam passagem." });
-    pushGameLog("OXX/OXXh: mapa completo jogável ativo com personagens PNG integrados.");
+    const current = CHARACTERS.find(c => c.id === OXX.state.characterId) || CHARACTERS[0];
+    this.player = new Player(this, this.world.spawn.x, this.world.spawn.y, current.sprite);
+    this.cameras.main.startFollow(this.player.sprite, true, 0.12, 0.12);
+    this.physics.add.collider(this.player.sprite, this.collisionZones);
+    this.physics.add.overlap(this.player.sprite, this.lootGroup, (_p, item) => this.collectLoot(item));
+
+    this.input.on('pointerdown', pointer => {
+      if (pointer.event.target?.closest?.('.game-ui')) return;
+      const wp = pointer.positionToCamera(this.cameras.main);
+      this.player.setDestination(wp.x, wp.y);
+    });
+
+    window.addEventListener('oxx:character:set', this.onCharacterSet);
+    EventBus.emit('world:ready', { message: 'Mapa Phaser OXX carregado.', world: { width: this.world.width, height: this.world.height } });
+    this.brigs = new Brigs(this);
   }
-
-  update() {
-    this.movementSystem?.update();
+  onCharacterSet = e => {
+    const character = CHARACTERS.find(c => c.id === e.detail.id) || CHARACTERS[0];
+    this.player?.setSprite(character.sprite);
+    EventBus.emit('player:changed', character);
+  };
+  shutdown() { window.removeEventListener('oxx:character:set', this.onCharacterSet); }
+  drawTileWorld() {
+    const ts = this.world.tileSize;
+    for (let y=0; y<this.world.height; y+=ts) {
+      for (let x=0; x<this.world.width; x+=ts) {
+        this.add.image(x+ts/2, y+ts/2, TILE_BY_REGION(x,y)).setDisplaySize(ts,ts).setDepth(-10000 + y);
+      }
+    }
+    // Rivers/lakes as patches
+    for (let i=0;i<75;i++) {
+      const x = 230 + i*28, y = 1320 + Math.sin(i/7)*100;
+      this.add.image(x,y,'tile_water').setDisplaySize(96,96).setDepth(-9000+y);
+    }
   }
-
-  registerCharacterSwitch() {
-    this.switchHandler = (event) => {
-      const characterKey = event.detail?.characterKey;
-      if (!characterKey) return;
-      this.player.setCharacter(characterKey);
-      this.toast(`Personagem de teste alterado: ${characterKey}`);
-      pushGameLog(`OXX trocou personagem em tempo real para ${characterKey}.`);
-    };
-    window.addEventListener("aetherion:switch-character", this.switchHandler);
-    this.events.once("shutdown", () => window.removeEventListener("aetherion:switch-character", this.switchHandler));
+  createObjects() {
+    for (const obj of this.world.objects) {
+      const image = this.add.image(obj.x, obj.y, `obj_${obj.kind}`).setOrigin(0.5, 1).setDepth(Math.floor(obj.y));
+      image.setDisplaySize(obj.w, obj.h);
+      if (obj.collider) this.collisionZones.push(OXXh.createCollision(this, obj.collider, obj.kind));
+      if (obj.gate) {
+        image.setInteractive({ useHandCursor: true });
+        image.on('pointerdown', () => {
+          const region = this.world.fastTravel.find(r => r.id === obj.to) || this.world.fastTravel[0];
+          this.fastTravelTo(region);
+        });
+      }
+    }
   }
-
+  createFastTravel() {
+    this.travelGroup = this.add.group();
+    for (const region of this.world.fastTravel) {
+      const circle = this.add.circle(region.x, region.y - 70, 18, Phaser.Display.Color.HexStringToColor(region.color).color, 0.85).setStrokeStyle(3, 0x080608).setDepth(9990).setInteractive({ useHandCursor: true });
+      const label = OXXh.screenText(this, region.name, region.x + 24, region.y - 84, { fontSize: '14px' }).setDepth(9991);
+      circle.on('pointerdown', () => this.fastTravelTo(region));
+      this.travelGroup.addMultiple([circle, label]);
+    }
+  }
+  fastTravelTo(region) {
+    OXX.travel(region);
+    this.player.sprite.setPosition(region.x, region.y);
+    EventBus.emit('travel:done', { region });
+  }
   createNPCs() {
-    [
-      { name: "Arauto de Valoria", x: 250, y: 230, text: "Use os portões e clique nos nomes das regiões para viajar. As muralhas protegem e bloqueiam." },
-      { name: "Bruxa de Nythra", x: 1180, y: 610, text: "No pântano, cada ponte é uma escolha. Fora dela, a lama cobra preço." },
-      { name: "Ferreiro de Krag-Dhur", x: 1120, y: 335, text: "Pedra não se atravessa. Portão aberto, caminho vivo." },
-      { name: "Vigia da Ruptura", x: 1050, y: 770, text: "O Abismo não tem chão confiável. Siga as pontes ou caia na memória do vazio." }
-    ].forEach((npc) => {
-      new NPC(this, {
-        name: npc.name,
-        x: npc.x,
-        y: npc.y,
-        texture: "npc_guard",
-        dialogue: [npc.text]
-      });
-    });
+    this.npcs = this.physics.add.staticGroup();
+    for (const npc of this.world.npcs) {
+      const s = this.npcs.create(npc.x, npc.y, npc.sprite).setOrigin(0.5,0.88).setDisplaySize(64,90).setDepth(npc.y).refreshBody();
+      s.body.setSize(28,24).setOffset(18,60);
+      s.setInteractive({ useHandCursor: true });
+      s.setData('npc', npc);
+      s.on('pointerdown', () => EventBus.emit('npc:dialogue', npc));
+      OXXh.screenText(this, npc.name.split(',')[0], npc.x-42, npc.y-98, { fontSize:'13px' });
+    }
   }
-
   createMobs() {
-    [
-      { name: "Goblin Saqueador", x: 335, y: 405, texture: "goblin_saqueador_png", enemyTexture: "goblin_saqueador_png", level: 3 },
-      { name: "Lobo de Campo", x: 390, y: 250, texture: "lobo_de_campo_png", enemyTexture: "lobo_de_campo_png", level: 4 },
-      { name: "Bandido Sombrio", x: 330, y: 805, texture: "bandido_sombrio_png", enemyTexture: "bandido_sombrio_png", level: 7 },
-      { name: "Golem Rachado", x: 1140, y: 270, texture: "golem_rachado_png", enemyTexture: "golem_rachado_png", level: 10 },
-      { name: "Verath, Dragão Fraturado", x: 1120, y: 900, texture: "verath_dragao_fraturado_png", enemyTexture: "verath_dragao_fraturado_png", level: 25, width: 145, height: 120 }
-    ].forEach((mob) => new Mob(this, mob));
-  }
-
-  createChests() {
-    [
-      { name: "Baú dos Campos", x: 320, y: 190, rarity: "common" },
-      { name: "Baú Arcano", x: 700, y: 240, rarity: "rare" },
-      { name: "Baú de Solkar", x: 435, y: 865, rarity: "rare" },
-      { name: "Baú Anômalo", x: 980, y: 880, rarity: "anomaly" }
-    ].forEach((chest) => new Chest(this, chest));
-  }
-
-  createWorldHud() {
-    this.toastText = this.add.text(20, 94, "", {
-      fontFamily: "Georgia",
-      fontSize: "14px",
-      color: "#fff2c2",
-      backgroundColor: "rgba(0,0,0,.66)",
-      padding: { x: 10, y: 8 },
-      wordWrap: { width: 540 }
-    }).setScrollFactor(0).setDepth(300).setVisible(false);
-
-    this.add.text(20, 18, "Aetherion — OXXh Mapa Jogável", {
-      fontFamily: "Georgia",
-      fontSize: "25px",
-      color: "#f0d694",
-      stroke: "#000",
-      strokeThickness: 5
-    }).setScrollFactor(0).setDepth(300);
-    this.add.text(20, 52, "WASD/setas, clique no chão para andar, clique em regiões para viajar. Paredes e construções têm colisão.", {
-      fontFamily: "Georgia",
-      fontSize: "14px",
-      color: "#d6c49d",
-      stroke: "#000",
-      strokeThickness: 4
-    }).setScrollFactor(0).setDepth(300);
-  }
-
-  createMobileControls() {
-    const base = this.add.circle(85, this.scale.height - 92, 48, 0x111111, 0.45).setScrollFactor(0).setDepth(400);
-    const stick = this.add.circle(85, this.scale.height - 92, 18, 0xc9a45c, 0.78).setScrollFactor(0).setDepth(401);
-    base.setInteractive();
-    const reset = () => { stick.setPosition(85, this.scale.height - 92); this.movementSystem?.setJoystickVector(0, 0); };
-    base.on("pointermove", (pointer) => {
-      if (!pointer.isDown) return;
-      const dx = Phaser.Math.Clamp(pointer.x - 85, -42, 42);
-      const dy = Phaser.Math.Clamp(pointer.y - (this.scale.height - 92), -42, 42);
-      stick.setPosition(85 + dx, this.scale.height - 92 + dy);
-      this.movementSystem?.setJoystickVector(dx / 42, dy / 42);
+    this.mobs = this.physics.add.group();
+    for (const mob of this.world.mobs) {
+      const s = this.mobs.create(mob.x, mob.y, mob.sprite).setOrigin(0.5,0.82).setDepth(mob.y).setInteractive({ useHandCursor:true });
+      const size = mob.boss ? 180 : 76;
+      s.setDisplaySize(size, size);
+      s.body.setSize(size*0.46, size*0.35).setOffset(size*0.25, size*0.55);
+      s.setData('mob', mob);
+      s.on('pointerdown', () => this.startBattle(mob));
+      OXXh.screenText(this, `${mob.name} Nv.${mob.level}`, mob.x-size/2, mob.y-size-10, { fontSize:'13px', color: mob.boss ? '#ff9b68' : '#f7e3b0' });
+    }
+    this.physics.add.collider(this.mobs, this.collisionZones);
+    this.physics.add.overlap(this.player.sprite, this.mobs, (_p, mobSprite) => {
+      const mob = mobSprite.getData('mob');
+      EventBus.emit('mob:near', mob);
     });
-    base.on("pointerup", reset);
-    base.on("pointerout", reset);
   }
-
+  createLoot() {
+    this.lootGroup = this.physics.add.staticGroup();
+    for (const item of this.world.loot) {
+      const s = this.lootGroup.create(item.x, item.y, item.sprite).setDisplaySize(42,42).setDepth(item.y).refreshBody();
+      s.setData('item', item);
+    }
+  }
+  collectLoot(itemSprite) {
+    const item = itemSprite.getData('item');
+    itemSprite.destroy();
+    EventBus.emit('loot:collected', item);
+  }
   startBattle(mob) {
-    this.scene.start("BattleScene", {
-      enemyName: mob.name,
-      enemyTexture: mob.enemyTexture,
-      enemyLevel: mob.level,
-      returnScene: "WorldScene"
+    EventBus.emit('battle:start', mob);
+    this.scene.start('BattleScene', { mob, characterId: OXX.state.characterId });
+  }
+  update(time) {
+    this.player?.update();
+    this.mobs?.children?.iterate?.(mob => {
+      if (!mob) return;
+      mob.setDepth(Math.floor(mob.y));
+      if (time % 2400 < 16) mob.body.setVelocity(Phaser.Math.Between(-30,30), Phaser.Math.Between(-30,30));
     });
-  }
-
-  showDialogue(name, text) {
-    this.dialogueSystem?.show(name, text);
-  }
-
-  toast(message) {
-    if (!this.toastText) return;
-    this.toastText.setText(message).setVisible(true);
-    this.time.delayedCall(2600, () => this.toastText?.setVisible(false));
+    this.brigs?.update(time);
   }
 }

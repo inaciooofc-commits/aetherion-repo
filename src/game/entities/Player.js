@@ -1,75 +1,45 @@
-import EquipmentVisualSystem, { DEFAULT_EQUIPMENT_VISUAL } from "../systems/EquipmentVisualSystem";
-import { getOxxCharacter } from "../data/oxxCharacters";
+import { OXXh } from '../oxx/OXXh';
 
-export default class Player {
-  constructor(scene, x, y, options = {}) {
+export class Player {
+  constructor(scene, x, y, spriteKey) {
     this.scene = scene;
-    this.speed = 185;
-    this.characterKey = options.characterKey || scene.registry.get("oxx:activeCharacter") || "valorian_knight";
-    this.equipment = { ...DEFAULT_EQUIPMENT_VISUAL, ...(options.equipment || options) };
-    this.mode = options.mode || "sprite";
-
-    this.bodySprite = scene.physics.add.sprite(x, y, this.characterKey, 0)
-      .setCollideWorldBounds(true)
-      .setSize(44, 54)
-      .setOffset(42, 92)
-      .setDepth(11);
-
-    if (this.mode === "sprite") {
-      this.bodySprite.setDisplaySize(82, 110);
-      this.bodySprite.play(`${this.characterKey}_idle_south`, true);
-      this.visual = null;
-    } else {
-      this.bodySprite.setVisible(false);
-      this.equipmentVisual = new EquipmentVisualSystem(scene);
-      this.visual = this.equipmentVisual.createCharacterContainer(x, y, this.equipment);
-    }
-
-    this.shadow = scene.add.ellipse(x, y + 31, 72, 24, 0x000000, 0.35).setDepth(7);
-    this.nameplate = scene.add.text(x, y - 72, getOxxCharacter(this.characterKey).name, {
-      fontFamily: "Georgia",
-      fontSize: "13px",
-      color: "#f0d694",
-      backgroundColor: "rgba(0,0,0,.45)",
-      padding: { x: 6, y: 2 }
-    }).setOrigin(0.5).setDepth(20);
+    this.sprite = scene.physics.add.sprite(x, y, spriteKey).setOrigin(0.5, 0.88);
+    this.sprite.setDisplaySize(64, 96);
+    this.sprite.body.setSize(28, 26).setOffset(18, 62);
+    this.sprite.setCollideWorldBounds(true);
+    this.speed = 190;
+    this.destination = null;
+    this.cursors = scene.input.keyboard.createCursorKeys();
+    this.keys = scene.input.keyboard.addKeys('W,A,S,D');
   }
-
-  syncVisual() {
-    if (this.visual) this.visual.setPosition(this.bodySprite.x, this.bodySprite.y);
-    this.shadow.setPosition(this.bodySprite.x, this.bodySprite.y + 34);
-    this.nameplate.setPosition(this.bodySprite.x, this.bodySprite.y - 72);
+  setSprite(spriteKey) {
+    this.sprite.setTexture(spriteKey);
+    this.sprite.setDisplaySize(64, 96);
   }
-
-  applyEquipment(nextEquipment = {}) {
-    this.equipment = { ...this.equipment, ...nextEquipment };
-    if (this.visual?.applyEquipment) this.visual.applyEquipment(this.equipment);
-  }
-
-  setCharacter(characterKey) {
-    this.characterKey = characterKey || this.characterKey;
-    const character = getOxxCharacter(this.characterKey);
-    this.bodySprite.setTexture(this.characterKey, 0).setVisible(true).setDisplaySize(82, 110);
-    if (this.visual) this.visual.setVisible(false);
-    this.nameplate.setText(character.name);
-    this.playState("idle_south");
-  }
-
-  playState(state = "idle_south") {
-    const animKey = `${this.characterKey}_${state}`;
-    if (this.scene.anims.exists(animKey)) this.bodySprite.play(animKey, true);
-  }
-
-  setMoving(isMoving, direction = "south") {
-    if (this.mode === "sprite") {
-      this.playState(isMoving ? `walk_${direction}` : "idle_south");
-      return;
-    }
-    this.visual?.setScale(isMoving ? 1.035 : 1);
-  }
-
-  setFlip(flip) {
-    if (this.mode === "sprite") return;
-    this.visual?.setScale(flip ? -Math.abs(this.visual.scaleX || 1) : Math.abs(this.visual.scaleX || 1), this.visual.scaleY || 1);
+  setDestination(x, y) { this.destination = { x, y }; }
+  update() {
+    const body = this.sprite.body;
+    let vx = 0, vy = 0;
+    if (this.cursors.left.isDown || this.keys.A.isDown) vx -= 1;
+    if (this.cursors.right.isDown || this.keys.D.isDown) vx += 1;
+    if (this.cursors.up.isDown || this.keys.W.isDown) vy -= 1;
+    if (this.cursors.down.isDown || this.keys.S.isDown) vy += 1;
+    if (vx || vy) {
+      this.destination = null;
+      const len = Math.hypot(vx, vy) || 1;
+      body.setVelocity((vx/len)*this.speed, (vy/len)*this.speed);
+      this.sprite.setFlipX(vx < 0);
+    } else if (this.destination) {
+      const dx = this.destination.x - this.sprite.x;
+      const dy = this.destination.y - this.sprite.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist < 8) {
+        body.setVelocity(0,0); this.destination = null;
+      } else {
+        body.setVelocity((dx/dist)*this.speed, (dy/dist)*this.speed);
+        this.sprite.setFlipX(dx < 0);
+      }
+    } else body.setVelocity(0,0);
+    this.sprite.setDepth(Math.floor(this.sprite.y));
   }
 }

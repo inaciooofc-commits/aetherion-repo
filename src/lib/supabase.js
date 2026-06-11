@@ -1,12 +1,8 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const url = import.meta.env.VITE_SUPABASE_URL;
+const anon = import.meta.env.VITE_SUPABASE_ANON_KEY;
+export const supabase = url && anon ? createClient(url, anon) : null;
 
-export const isSupabaseConfigured = Boolean(
-  supabaseUrl && supabaseAnonKey && !supabaseUrl.includes("SEU-PROJETO")
-);
-
-export const supabase = isSupabaseConfigured
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : null;
+export const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || 'inaciooofc@gmail.com';
+export function isAdminEmail(email) { return String(email || '').toLowerCase() === ADMIN_EMAIL.toLowerCase(); }
